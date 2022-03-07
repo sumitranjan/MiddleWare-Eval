@@ -1,4 +1,4 @@
-const express = required("express");
+const express = require("express");
 
 const app =  express();
 
@@ -8,27 +8,33 @@ app.get("/books",logger, (req,res) => {
     return res.send({ route: "/books"});
 })
 
-app.get("/libraries",logger, (req,res) => {
-    return res.send({ route: "/libraries", permission: true});
+app.get("/libraries",checkPermission("libraries") , (req,res) => {
+    return res.send({ route: "/libraries", permission: req.permission});
 })
 
-app.get("/authors",logger, (req,res) => {
-    return res.send({route: "/authors", permission: true});
+app.get("/authors",checkPermission("authors"), (req,res) => {
+    return res.send({route: "/authors", permission: req.permission});
 })
 
+function checkPermission(role){
+    return function logger(req, res ,next){
+        if(role==="libraries" || role==="authors"){
+            return next();
+        }
+        return res.send("Not allowed");
+    }
+}
 
 function logger(req, res, next){
-    if(req.path === "/books"){
-        req.role = "books";
+    if(req.path === "/libraries"){
+        req.permission= true ;
     }
-    else if(req.path === "/libraries"){
-        req.role = "libraries";
-    }
-    else{
-        req.role = "authors";
+    else if(req.path === "/authors"){
+        req.permission= true ;
     }
     console.log("logger called");
     next();
+
 }
 
 
@@ -36,6 +42,6 @@ function logger(req, res, next){
 
 
 
-app.listner(5000, () => {
+app.listen(5000, () => {
     console.log("Listening on the port");
 });
