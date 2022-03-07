@@ -1,3 +1,9 @@
+/*Install nodemon & express package to run this file
+Command to run:
+npm install -g nodemon
+nnp install express
+*/
+
 const express = require("express");
 
 const app =  express();
