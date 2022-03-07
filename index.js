@@ -37,11 +37,6 @@ function logger(req, res, next){
 
 }
 
-
-
-
-
-
 app.listen(5000, () => {
     console.log("Listening on the port");
 });
